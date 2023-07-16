@@ -1,0 +1,42 @@
+// 帮助按钮
+@import './color.scss';
+
+
+// 不同颜色种类按钮
+@mixin colorBtn($backColor, $hoverBackColor, $borderColor, $borderBackColor, $fontColor, $fontBackColor, $boxShadowColor) {
+    color: $fontColor;
+    background: $backColor;
+    box-shadow: 0 2px 0 $boxShadowColor;
+    border: $borderColor 1px solid;
+    &:hover {
+        color: $fontBackColor !important;
+        background: $hoverBackColor;
+        border: $borderBackColor 1px solid;
+    }
+}
+
+// // 不同大小按钮
+// @mixin sizeBtn($paddingVertical, $paddingLevel) {
+//     line-height: 22px;
+//     font-size: 14px;
+//     font-weight: 400;
+//     border-radius: 2px;
+//     padding: $paddingVertical $paddingLevel;
+// }
+
+// 普通不可选中
+.disable-btn {
+    color: $font-disableText-black;
+    background: $gray-5;
+    // pointer-events: none;
+    border: $gray-5 1px solid !important;
+}
+
+// 标准-主要
+.standard-main-btn {
+    @include colorBtn($--color-primary, $blue-6, $--color-primary, $--color-primary, $btn-active-color, $btn-active-color, $shandow-color)
+}
+
+// .help{
+//     @include colorBtn( , #fff, , , , , )
+// }

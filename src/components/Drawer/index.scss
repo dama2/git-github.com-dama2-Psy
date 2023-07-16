@@ -1,0 +1,19 @@
+.drawer{
+    position: fixed;
+    z-index: 5;
+    right: 0;
+    top:30%;
+    button{
+        padding: 2px;
+        width: 30px;
+        height: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    // .button{
+        
+    // }
+}

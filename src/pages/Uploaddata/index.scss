@@ -1,0 +1,52 @@
+@import '../../styles/color.scss';
+@import '../../styles/size.scss';
+
+
+.upload {
+    .steps {
+        height: 70px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    // 正在执行的步骤条，字体加重
+    .ant-steps-item-active .ant-steps-item-title {
+        font-weight: bold;
+    }
+
+    // 上传内容区
+    .uploadContent {
+        line-height: 260px;
+        text-align: center;
+        border: 1px dashed $border-color;
+        margin-top: 16px;
+        
+    }
+    .button{
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    // 错误信息
+    .errorContent{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-right: -16px;
+    }
+    .submitContent{
+        margin-top: 16px;
+        border: 1px dashed $border-color;
+        font-size: $big-size;
+        .textArea{
+            margin: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            width: auto;
+        }
+    }
+}

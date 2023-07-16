@@ -1,0 +1,13 @@
+@import '../../styles/size.scss';
+
+.mycard{
+    margin-top: 16px;
+    flex: 1;
+    margin-right: 16px;
+    min-width: 300px;
+    p{
+        font-size:$small-size;
+        font-weight: 500;
+    }
+
+}
