@@ -50,7 +50,7 @@ export default function TableRolling(props) {
             ? width - scrollbarSize - 1
             : width;
         }}
-        height={770}
+        height={480}
         rowCount={rawData.length}
         rowHeight={() => 54}
         width={tableWidth}
@@ -71,7 +71,7 @@ export default function TableRolling(props) {
               color: 'red',
             }}
           >
-            {rawData[rowIndex][mergedColumns[columnIndex]]}
+            {rawData[rowIndex][mergedColumns[columnIndex].dataIndex]}
           </div>
         )
         }
