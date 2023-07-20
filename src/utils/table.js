@@ -51,6 +51,39 @@ const transaction = [
 ]
 
 // 数据配置界面，数据介绍
+const fraudTrans = [
+    {
+        title: '用户ID',
+        // width: 100,
+        dataIndex: 'u_id',
+        key: 'u_id',
+        fixed: 'left',
+    },
+    {
+        title: '商品ID',
+        // width: 100,
+        dataIndex: 'sku_id',
+        key: 'sku_id',
+        fixed: 'left',
+
+    },
+    {
+        title: '订单时间',
+        // width: 100,
+        dataIndex: 'date',
+        key: 'date',
+        fixed: 'left',
+    },
+    {
+        title: '商品价格',
+        // width: 100,
+        dataIndex: 'price',
+        key: 'price',
+        fixed: 'left',
+    },
+];
+
+// 数据配置界面，数据介绍
 const dataShow = [
     {
         title: '文件ID',
@@ -70,5 +103,6 @@ const dataShow = [
 
 export {
     dataShow,
-    transaction
+    transaction,
+    fraudTrans
 }

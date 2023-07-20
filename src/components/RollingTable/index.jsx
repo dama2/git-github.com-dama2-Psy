@@ -50,7 +50,7 @@ export default function TableRolling(props) {
             ? width - scrollbarSize - 1
             : width;
         }}
-        height={480}
+        height={scroll.y}
         rowCount={rawData.length}
         rowHeight={() => 54}
         width={tableWidth}
