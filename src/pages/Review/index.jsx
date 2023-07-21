@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Table, Input, Space, } from 'antd'
+import { Button, Table, Descriptions, Tabs } from 'antd'
 import { SearchOutlined } from '@ant-design/icons';
 import qs from 'qs'
 import Highlighter from 'react-highlight-words';
 import { fraudTrans } from '../../utils/table'
 import './index.scss'
+import MyDescription from '../../components/MyDescription';
 
 export default function Review() {
     const getRandomuserParams = (params) => ({
@@ -12,7 +13,8 @@ export default function Review() {
         page: params.pagination?.current,
         ...params,
     });
-    const [searchedColumn, setSearchedColumn] = useState('');
+
+    
     // 表格中展示的数据
     const [data, setData] = useState([
         {
@@ -21,6 +23,13 @@ export default function Review() {
             date: '2002/01/01',
             price: 10,
             status: 0
+        },
+        {
+            u_id: 200,
+            sku_id: 20,
+            date: '2002/01/01',
+            price: 10,
+            status: 1
         }
 
 
@@ -34,7 +43,8 @@ export default function Review() {
             defaultPageSize: 12
         },
     });
-
+    // 当前选择的的商品ID，以及商品的ID，因为系统中商品的ID，不是唯一的，
+    const [order,setOrder]=useState({})
     // 展示的数据
     const showColumns = [
         ...fraudTrans,
@@ -93,6 +103,22 @@ export default function Review() {
         // fetchData();
     }, [JSON.stringify(tableParams),]);
 
+    // tabs栏中展示的详细信息
+    const items = [
+        {
+            key: '1',
+            label: `订单详情`,
+            children: <MyDescription info={order}/>
+        },
+        {
+            key: '2',
+            label: `心理模型性情`,
+            children: `Content of Tab Pane 2`,
+        },
+    ];
+
+    const onChange = () => { }
+
 
     return (
         <div className='reviewContent'>
@@ -107,7 +133,8 @@ export default function Review() {
                 />
             </div>
             <div className='analyze'>
-                
+                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+
 
 
 
