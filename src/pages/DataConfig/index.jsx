@@ -1,23 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Table, message } from 'antd';
 import './index.scss';
 import { dataShow } from '../../utils/table';
+import { getAllDataSet } from '../../api/data';
 
 
 
 export default function DataConfig() {
-  const data = [
-    {
-      key: 1,
-      id: '00001',
-      description: '这是京东的一个数据集',
-    },
-    {
-      key: 2,
-      id: '00002',
-      description: '这是京东的一个数据集',
-    }
-  ];
+  const [data,setData]=useState([])
+  useEffect(()=>{
+    getAllDataSet().then(value=>setData(value))
+
+  },[])
   const colums = [...dataShow, {
     title: '操作',
     key: 'operation',

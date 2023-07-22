@@ -4,6 +4,7 @@ import * as echarts from 'echarts';
 import { transaction } from '../../utils/table';
 import './index.scss';
 import TableRolling from '../../components/RollingTable';
+import { getAllTransRecord } from '../../api/trans';
 
 
 export default function Monitor() {
@@ -13,19 +14,16 @@ export default function Monitor() {
   var rollTop = 1.5
   const [timer, setTimer] = useState()
   // 列表数据
-  const data = new Array(10000).fill({
-    u_id: 200,
-    sku_id: 200,
-    date: '2002/01/01',
-    price: 10,
-    cate: 10,
-    label: 0
-  })
+  const [data,setData] = useState([])
   const total = useRef(0)
   var chartDom
   var myChart
   var option;
   useEffect(() => {
+    getAllTransRecord({key:'1'}).then(value=>{
+      console.log(value)
+      setData(value)
+    }).catch(error=>console.log(error))
     chartDom = document.querySelector('#echarts-trans');
     console.log(chartDom)
     myChart = echarts.init(chartDom);

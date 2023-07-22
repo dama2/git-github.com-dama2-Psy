@@ -88,8 +88,8 @@ const dataShow = [
     {
         title: '文件ID',
         width: 100,
-        dataIndex: 'id',
-        key: 'id',
+        dataIndex: 'fileID',
+        key: 'fileID',
         fixed: 'left',
     },
     {

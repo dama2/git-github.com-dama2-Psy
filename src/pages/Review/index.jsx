@@ -92,6 +92,7 @@ export default function Review() {
                     ...tableParams,
                     pagination: {
                         ...tableParams.pagination,
+                        // 
                         total: 200,
                     },
                 });

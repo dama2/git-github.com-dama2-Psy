@@ -9,30 +9,39 @@ import Review from '../pages/Review'
 
 export default ([
     {
-        path:'/home',
-        element:<Home/>
+        path: '/home',
+        element: <Home />
     },
     {
-        path:'/upload',
-        element:<Upload/>
+        path: '/tmonitor',
+        element: <Psy />
+    },
+    {
+        path: '/treview',
+        element: <Review />
+    },
+    {
+        path: '/dataConfig',
+        children: [
+            {
+                path: '',
+                element: <Navigate to="dataDetail"></Navigate>
+            }, 
+            {
 
+                path: 'upload',
+                element: <Upload />
+            },
+            {
+                path:'dataDetail',
+                element:<DataConfig/>
+            }
+        ],
     },
     {
-        path:'/tmonitor',
-        element:<Psy/>
-    },
-    {
-        path:'/treview',
-        element:<Review/>
-    },
-    {
-        path:'/dataConfig',
-        element:<DataConfig/>
-    },
-    {
-        path:'/',
-        element:<Navigate to="/home"></Navigate>
+        path: '/',
+        element: <Navigate to="/home"></Navigate>
     }
 ]
-    
+
 )
