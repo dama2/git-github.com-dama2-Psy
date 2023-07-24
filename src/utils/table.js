@@ -3,8 +3,8 @@ const transaction = [
     {
         title: '用户ID',
         // width: 100,
-        dataIndex: 'u_id',
-        key: 'u_id',
+        dataIndex: 'user_id',
+        key: 'user_id',
         fixed: 'left',
     },
     {
@@ -42,10 +42,6 @@ const transaction = [
         dataIndex: 'label',
         key: 'label',
         fixed: 'left',
-        color: 'red',
-        style: {
-            color: 'red'
-        },
         render: (item) => <span>123</span>
     }
 ]
@@ -55,8 +51,8 @@ const fraudTrans = [
     {
         title: '用户ID',
         // width: 100,
-        dataIndex: 'u_id',
-        key: 'u_id',
+        dataIndex: 'user_id',
+        key: 'user_id',
         fixed: 'left',
     },
     {

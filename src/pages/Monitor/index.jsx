@@ -12,54 +12,35 @@ export default function Monitor() {
   var rollTime = 80
   var rollNum = 50
   var rollTop = 1.5
-  const [timer, setTimer] = useState()
+  // 图表定时器, 交易金额定时器
+  var timer2, timer3
+  // 交易数据展示
+  const [timer1, setTimer] = useState()
   // 列表数据
-  const [data,setData] = useState([])
-  const total = useRef(0)
+  const [data, setData] = useState([])
+  // 总交易金额
+  const [total, setTotal] = useState(0)
+  // 拦截金额
+  const [interception,setInterception]=useState(0)
+  // 总交易笔数
+  const [totalTrans,setTotalTrans]=useState(0)
+  // 拦截交易数量
+  const [fruadTrans,setFruadTrans]=useState(0)
+
+
+  //  每一千条数据，更新一次
+  var changeNum = 1000
+  // const total = useRef(0)
+
   var chartDom
   var myChart
   var option;
+  // 第一次获取表格数据
   useEffect(() => {
-    getAllTransRecord({key:'1'}).then(value=>{
-      console.log(value)
+    getAllTransRecord({ key: '1' }).then(value => {
       setData(value)
-    }).catch(error=>console.log(error))
-    chartDom = document.querySelector('#echarts-trans');
-    console.log(chartDom)
-    myChart = echarts.init(chartDom);
-    option && myChart.setOption(option);
-    var timer1 = setInterval(function () {
-      let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
-      data1.shift();
-      data1.push(Math.round(Math.random() * 1000));
-      data2.shift();
-      data2.push(+(Math.random() * 10 + 5).toFixed(1));
-      categories.shift();
-      categories.push(axisData);
-      categories2.shift();
-      categories2.push(app.count++);
-      myChart.setOption({
-        xAxis: [
-          {
-            data: categories
-          },
-          {
-            data: categories2
-          }
-        ],
-        series: [
-          {
-            data: data1
-          },
-          {
-            data: data2
-          }
-        ]
-      });
-    }, 2100);
+    })
   }, [])
-
-
 
   const categories = (function () {
     let now = new Date();
@@ -170,27 +151,86 @@ export default function Monitor() {
   };
   var app = {}
   app.count = 11;
+  app.time = 0;
+
 
   // 使列表可以动态加载
   const InitialScroll = () => {
+    clearInterval(timer1)
     let v = document.getElementsByClassName('virtual-grid')[0];
     if (data.length > rollNum && flag) {
       // 只有当大于10条数据的时候 才会看起滚动
-      let time = setInterval(() => {
+      let timer = setInterval(() => {
         v.scrollTop += Number(rollTop);
-        // setTotal(total+10)
-        total.current += 10
       }, rollTime);
-      setTimer(time); // 定时器保存变量 利于停止
+      setTimer(timer); // 定时器保存变量 利于停止
     }
   };
 
+  // 展示现在交易详情
+  const dynamicShow = () => {
+    clearInterval(timer2)
+    clearInterval(timer3)
+    timer2 = setInterval(function () {
+      var temp=data.slice(changeNum * app.time,changeNum * ++app.time)
+      var totalTemp=total;
+      var interceptionTemp=interception
+      var fruadTransTemp=fruadTrans
+      temp.forEach((item,index)=>{
+        totalTemp+=item.price
+        if(item.label===1){
+          interceptionTemp+=item.price
+          fruadTransTemp++
+        }
+      })
+      setTotal(totalTemp)
+      setTotalTrans(changeNum * app.time)
+      setInterception(interceptionTemp)
+      setFruadTrans(fruadTransTemp)
 
+      let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
+      data1.shift();
+      data1.push(Math.round(Math.random() * 1000));
+      data2.shift();
+      data2.push(+(Math.random() * 10 + 5).toFixed(1));
+      categories.shift();
+      categories.push(axisData);
+      categories2.shift();
+      categories2.push(app.count++);
+      myChart.setOption({
+        xAxis: [
+          {
+            data: categories
+          },
+          {
+            data: categories2
+          }
+        ],
+        series: [
+          {
+            data: data1
+          },
+          {
+            data: data2
+          }
+        ]
+      });
+    }, 5000);
+  }
 
   useEffect(() => {
     InitialScroll()
-    return () => clearInterval(timer)
-  }, [])
+    chartDom = document.querySelector('#echarts-trans');
+    myChart = echarts.init(chartDom);
+    option && myChart.setOption(option);
+    dynamicShow()
+    return () => {
+      clearInterval(timer2)
+      clearInterval(timer1)
+      clearInterval(timer3)
+    }
+  }, [data,total])
+
   return (
     <div className='monitorContent'>
 
@@ -199,15 +239,14 @@ export default function Monitor() {
         <h4>实时订单信息</h4>
         {/* 动态表格 */}
         <div onMouseLeave={() => { InitialScroll(); }}
-          onMouseEnter={() => { clearInterval(timer); }}>
+          onMouseEnter={() => { clearInterval(timer1); }}>
           <TableRolling
             columns={transaction}
             dataSource={data}
             scroll={{
-              y: 770,
+              y: 760,
             }} />
         </div>
-
 
       </div>
       {/* 统计数据 */}
@@ -216,12 +255,12 @@ export default function Monitor() {
         <div className='content'>
           <div className='total'>
             <div className='detail' >
-              <Statistic title="交易金额" value={total.current} precision={2} />
-              <Statistic title="拦截金额" value={112893} precision={2} color='red' />
+              <Statistic title="交易金额" value={total} precision={2} />
+              <Statistic title="拦截金额" value={interception} precision={2} />
             </div>
             <div className='detail'>
-              <Statistic title="交易笔数" value={112893} />
-              <Statistic title="拦截笔数" value={112893} />
+              <Statistic title="交易笔数" value={totalTrans} />
+              <Statistic title="拦截笔数" value={fruadTrans} />
             </div>
           </div>
           <div id='echarts-trans'>

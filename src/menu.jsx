@@ -19,7 +19,7 @@ const items = [
         path: '/treview',
       },
       {
-        label: '数据配置',
+        label: '模型管理',
         path: '/dataConfig',
         chileren:[
           {
@@ -27,7 +27,7 @@ const items = [
             path: 'upload',
           },
           {
-            label: '数据配置',
+            label: '模型',
             path: 'dataDetail',
           },
         ]
@@ -36,7 +36,6 @@ const items = [
 const App = () => {
   const [current, setCurrent] = useState('mail');
   const onClick = (e) => {
-    console.log('click ', e);
     setCurrent(e.path);
   };
   return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
