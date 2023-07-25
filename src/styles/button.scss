@@ -1,5 +1,6 @@
 // 帮助按钮
 @import './color.scss';
+@import './size.scss';
 
 
 // 不同颜色种类按钮
@@ -40,3 +41,15 @@
 // .help{
 //     @include colorBtn( , #fff, , , , , )
 // }
+
+
+.link-main-button{
+    font-size: $small-size;
+    color: $--color-primary;
+    :hover{
+        opacity: 1;
+    }
+
+
+
+}

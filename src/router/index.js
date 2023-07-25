@@ -21,26 +21,27 @@ export default ([
         element: <Review />
     },
     {
-        path: '/dataConfig',
+        path: '/model',
         children: [
             {
                 path: '',
-                element: <Navigate to="dataDetail"></Navigate>
+                element: <Navigate to="upload"></Navigate>
             }, 
             {
 
                 path: 'upload',
                 element: <Upload />
             },
-            {
-                path:'dataDetail',
-                element:<DataConfig/>
-            }
+            
         ],
     },
     {
+        path:'/dataDetail',
+        element:<DataConfig/>
+    },
+    {
         path: '/',
-        element: <Navigate to="/home"></Navigate>
+        element: <Navigate to="/dataDetail"></Navigate>
     }
 ]
 

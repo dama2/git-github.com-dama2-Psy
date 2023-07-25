@@ -7,24 +7,10 @@ import { changeStatus, getFruadTrans } from '../../api/trans';
 import MyRadar from '../../components/MyRadar';
 
 export default function Review() {
-    const getRandomuserParams = (params) => ({
-        results: params.pagination?.pageSize,
-        page: params.pagination?.current,
-        ...params,
-    });
-    const [searchedColumn, setSearchedColumn] = useState('');
+
+
     // 表格中展示的数据
-    const [data, setData] = useState([
-        {
-            u_id: 200,
-            sku_id: 200,
-            date: '2002/01/01',
-            price: 10,
-            status: 0
-        }
-
-
-    ])
+    const [data, setData] = useState([])
     // 是否正在加载
     const [loading, setLoading] = useState(false);
     // 页面的配置，包括当前在第几页，每页多少条数据
@@ -159,9 +145,7 @@ export default function Review() {
                 />
             </div>
             <div className='analyze'>
-                
-
-
+                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
 
             </div>
 

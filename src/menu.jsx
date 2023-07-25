@@ -20,7 +20,7 @@ const items = [
       },
       {
         label: '模型管理',
-        path: '/dataConfig',
+        path: '/model',
         chileren:[
           {
             label: '上传数据',

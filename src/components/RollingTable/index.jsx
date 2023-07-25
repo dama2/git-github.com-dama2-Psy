@@ -61,17 +61,17 @@ export default function TableRolling(props) {
             })}
             style={{
               ...style,
-              // ...rawData[rowIndex][mergedColumns[5]].style,
-              color: `${rawData[rowIndex][mergedColumns[5].dataIndex] === 0 ? 'black' : 'red'}`,
-              fontWeight: `${rawData[rowIndex][mergedColumns[5].dataIndex] === 0 ? '' : 'bold'}`,
+              color: `${rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? 'black' : 'white'}`,
+
+              fontWeight: `${rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? '' : 'bold'}`,
               boxSizing: 'border-box',
               padding: token.padding,
               borderBottom: `${token.lineWidth}px ${token.lineType} ${token.colorSplit}`,
-              background: token.colorBgContainer,
+              backgroundColor:`${rawData[rowIndex][mergedColumns[7].dataIndex] === 1 ? '#f5222d' : 'token.colorBgContainer'}`,
             }}
           >{
-              columnIndex === 5 ? 
-                rawData[rowIndex][mergedColumns[5].dataIndex] === 0 ? "正常" : '异常' : 
+              columnIndex === 7 ? 
+                rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? "正常" : '异常' : 
                 rawData[rowIndex][mergedColumns[columnIndex].dataIndex]
             }
           </div>

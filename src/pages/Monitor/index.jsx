@@ -11,47 +11,38 @@ export default function Monitor() {
   var flag = true
   var rollTime = 80
   var rollNum = 50
-  var rollTop = 1.5
+  var rollTop = 2
   // 图表定时器, 交易金额定时器
-  var timer2, timer3
+  var timer2
   // 交易数据展示
   const [timer1, setTimer] = useState()
+
   // 列表数据
   const [data, setData] = useState([])
   // 总交易金额
   const [total, setTotal] = useState(0)
   // 拦截金额
-  const [interception,setInterception]=useState(0)
+  const [interception, setInterception] = useState(0)
   // 总交易笔数
-  const [totalTrans,setTotalTrans]=useState(0)
+  const [totalTrans, setTotalTrans] = useState(0)
   // 拦截交易数量
-  const [fruadTrans,setFruadTrans]=useState(0)
+  const [fruadTrans, setFruadTrans] = useState(0)
 
+  const [time, setTime] = useState(0)
 
   //  每一千条数据，更新一次
   var changeNum = 1000
-  // const total = useRef(0)
 
   var chartDom
   var myChart
-  var option;
   // 第一次获取表格数据
   useEffect(() => {
     getAllTransRecord({ key: '1' }).then(value => {
       setData(value)
     })
   }, [])
-
-  const categories = (function () {
-    let now = new Date();
-    let res = [];
-    let len = 10;
-    while (len--) {
-      res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''));
-      now = new Date(+now - 2000);
-    }
-    return res;
-  })();
+  const data1 = []
+  const data2 = []
   const categories2 = (function () {
     let res = [];
     let len = 10;
@@ -60,24 +51,8 @@ export default function Monitor() {
     }
     return res;
   })();
-  const data1 = (function () {
-    let res = [];
-    let len = 10;
-    while (len--) {
-      res.push(Math.round(Math.random() * 1000));
-    }
-    return res;
-  })();
-  const data2 = (function () {
-    let res = [];
-    let len = 0;
-    while (len < 10) {
-      res.push(+(Math.random() * 10 + 5).toFixed(1));
-      len++;
-    }
-    return res;
-  })();
-  option = {
+
+  let option = {
     title: {
       text: '实时拦截放行'
     },
@@ -99,17 +74,13 @@ export default function Monitor() {
         saveAsImage: {}
       }
     },
+    // x轴是否可以拖拽
     dataZoom: {
       show: false,
       start: 0,
       end: 100
     },
     xAxis: [
-      {
-        type: 'category',
-        boundaryGap: true,
-        data: categories
-      },
       {
         type: 'category',
         boundaryGap: true,
@@ -120,26 +91,16 @@ export default function Monitor() {
       {
         type: 'value',
         scale: true,
-        name: 'Price',
-        max: 30,
+        name: '交易量',
+        max: 1000,
         min: 0,
         boundaryGap: [0.2, 0.2]
       },
-      {
-        type: 'value',
-        scale: true,
-        name: 'Order',
-        max: 1200,
-        min: 0,
-        boundaryGap: [0.2, 0.2]
-      }
     ],
     series: [
       {
         name: '正常交易',
         type: 'bar',
-        xAxisIndex: 1,
-        yAxisIndex: 1,
         data: data1
       },
       {
@@ -151,8 +112,6 @@ export default function Monitor() {
   };
   var app = {}
   app.count = 11;
-  app.time = 0;
-
 
   // 使列表可以动态加载
   const InitialScroll = () => {
@@ -170,42 +129,47 @@ export default function Monitor() {
   // 展示现在交易详情
   const dynamicShow = () => {
     clearInterval(timer2)
-    clearInterval(timer3)
     timer2 = setInterval(function () {
-      var temp=data.slice(changeNum * app.time,changeNum * ++app.time)
-      var totalTemp=total;
-      var interceptionTemp=interception
-      var fruadTransTemp=fruadTrans
-      temp.forEach((item,index)=>{
-        totalTemp+=item.price
-        if(item.label===1){
-          interceptionTemp+=item.price
+      var temp = data.slice(changeNum * time, changeNum * (time + 1))
+      var totalTemp = 0
+      var interceptionTemp = 0
+      var fruadTransTemp = 0
+      temp.forEach((item, index) => {
+        totalTemp += item.price
+        if (item.label === 1) {
+          interceptionTemp += item.price
           fruadTransTemp++
         }
       })
-      setTotal(totalTemp)
-      setTotalTrans(changeNum * app.time)
-      setInterception(interceptionTemp)
-      setFruadTrans(fruadTransTemp)
 
-      let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
-      data1.shift();
-      data1.push(Math.round(Math.random() * 1000));
-      data2.shift();
-      data2.push(+(Math.random() * 10 + 5).toFixed(1));
-      categories.shift();
-      categories.push(axisData);
-      categories2.shift();
-      categories2.push(app.count++);
+      setTotal(total + totalTemp)
+      setTotalTrans(changeNum * (time + 1))
+      setInterception(interception + interceptionTemp)
+      setFruadTrans(fruadTrans + fruadTransTemp)
+      setTime(time + 1)
+
+      if (data1.length > 10) {
+        data1.shift();
+        data2.shift(); 
+        categories2.shift();
+        categories2.push(app.count++);
+      }
+      data1.push(1000 - fruadTransTemp);
+      data2.push(fruadTransTemp);
+
+
+
+      
       myChart.setOption({
         xAxis: [
           {
-            data: categories
-          },
-          {
-            data: categories2
+            type: 'category',
+            boundaryGap: true,
+            data: categories2,
+            show: false
           }
         ],
+
         series: [
           {
             data: data1
@@ -227,9 +191,8 @@ export default function Monitor() {
     return () => {
       clearInterval(timer2)
       clearInterval(timer1)
-      clearInterval(timer3)
     }
-  }, [data,total])
+  }, [data, total])
 
   return (
     <div className='monitorContent'>

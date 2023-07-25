@@ -4,6 +4,17 @@ export default [
       key: '/home',
     },
     {
+      label: '模型管理',
+      key: '/model',
+      children: [
+        {
+          label: '上传数据',
+          key: '/model/upload',
+        },
+        
+      ]
+    },
+    {
       label: '交易监控',
       key: '/tmonitor',
     },
@@ -12,17 +23,8 @@ export default [
       key: '/treview',
     },
     {
-      label: '数据配置',
-      key: '/dataConfig',
-      children: [
-        {
-          label: '上传数据',
-          key: '/dataConfig/upload',
-        },
-        {
-          label: '数据配置',
-          key: '/dataConfig/dataDetail',
-        },
-      ]
+      label: '数据管理',
+      key: '/dataDetail',
     },
+
   ];
