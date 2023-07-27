@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Table, message } from 'antd';
+import { Statistic, Table, message, Row, Col, Card } from 'antd';
 import './index.scss';
 import { dataShow } from '../../utils/table';
 import { getAllDataSet } from '../../api/data';
@@ -13,12 +13,11 @@ export default function DataConfig() {
   // 获取表格数据
   const fenthData = () => {
     setLoading(true)
-    getAllDataSet().then(value => { 
-      setData(value) 
+    getAllDataSet().then(value => {
+      setData(value)
       setLoading(false)
     })
   }
-
   useEffect(() => {
     fenthData()
   }, [])
@@ -42,6 +41,8 @@ export default function DataConfig() {
   const [showDetail, setShowDeatil] = useState(false)
   // 展示那个数据集的详情
   const [fileID, setfileID] = useState(null)
+  // 用户点击了详情页面，保存要查看那个详情页面
+  
   return (
     <>
       <div className='dataconfig' style={{ display: showDetail ? 'none' : '' }}>
@@ -53,10 +54,18 @@ export default function DataConfig() {
         />
       </div>
       <div className='detail' style={{ display: showDetail ? '' : 'none' }}>
-        
-
-
-
+        <Card title='action' className='card'>
+          <Statistic title="数量" value={112893} valueStyle={{color:'red'}}/>
+        </Card>
+        <Card title='sku' className='card'>
+          <Statistic title="数量" value={112893} />
+        </Card>
+        <Card title='comment' className='card'>
+          <Statistic title="数量" value={112893} />
+        </Card>
+        <Card title='order' className='card'>
+          <Statistic title="数量" value={112893} />
+        </Card>
       </div>
     </>
   )

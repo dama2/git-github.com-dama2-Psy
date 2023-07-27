@@ -11,8 +11,9 @@ export default function Mycard(props) {
             bordered={false}
         >
             <p>是否上传：<Tag color={error.isExist ? "success" :"error"}> {error.isExist ? '是' : "否"} </Tag></p>
-            <p>缺失属性：{error.colums.map(ele=><Tag color="default"> {ele} </Tag>)}</p>
-            <p>存在NaN：{error.columsNan.map(ele=><Tag color="default"> {ele} </Tag>)}</p>
+            <p>是否为空：<Tag color={!error.isEmpty ? "success" :"error"}> {!error.isExist ? '是' : "否"} </Tag></p>
+            <p>缺失属性：{error.columns.map(ele=><Tag color="default"> {ele} </Tag>)}</p>
+            <p>存在NaN：{error.columnsNan.map(ele=><Tag color="default"> {ele} </Tag>)}</p>
             <p>数据类型错误：{error.dataType.map(ele=><Tag color="default"> {ele} </Tag>)}</p>
         </Card>
     )

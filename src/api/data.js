@@ -12,3 +12,31 @@ export const getAllDataSet = () => {
         })
     })
 }
+
+// 获取上传数据集的错误信息
+export const getUploadError = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api2/getDetail',{
+        params
+     }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('文件分析失败');
+            reject(error)
+        })
+    })
+}
+
+// 上传数据到数据库
+export const saveDate = (params) => {
+    return new Promise((resolve, reject) => {
+        request.post('/api2/saveData',null,{params:{...params}}).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('上传失败');
+            reject(error)
+        })
+    })
+}

@@ -1,7 +1,18 @@
 @import '../../styles/size.scss';
 @import '../../styles/color.scss';
 
-.dataconfig{
+.dataconfig {
     height: 100%;
     width: 100%;
+}
+
+.detail{
+    display: flex;
+    justify-content: space-between;
+    margin-right: -20px;
+    .card{
+        flex-grow: 1;
+        margin-right: 20px;
+    }
+
 }
