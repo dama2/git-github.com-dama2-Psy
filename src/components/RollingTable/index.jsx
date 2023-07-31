@@ -20,7 +20,7 @@ export default function TableRolling(props) {
     }
     return {
       ...column,
-      width: Math.floor(tableWidth / widthColumnCount),
+      width: Math.floor((tableWidth-690) / widthColumnCount),
     };
   });
   const gridRef = useRef();
@@ -61,17 +61,17 @@ export default function TableRolling(props) {
             })}
             style={{
               ...style,
-              color: `${rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? 'black' : 'white'}`,
+              color: `${rawData[rowIndex][mergedColumns[8].dataIndex] === 0 ? 'black' : 'white'}`,
 
-              fontWeight: `${rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? '' : 'bold'}`,
+              fontWeight: `${rawData[rowIndex][mergedColumns[8].dataIndex] === 0 ? '' : 'bold'}`,
               boxSizing: 'border-box',
               padding: token.padding,
               borderBottom: `${token.lineWidth}px ${token.lineType} ${token.colorSplit}`,
-              backgroundColor:`${rawData[rowIndex][mergedColumns[7].dataIndex] === 1 ? '#f5222d' : 'token.colorBgContainer'}`,
+              backgroundColor:`${rawData[rowIndex][mergedColumns[8].dataIndex] === 1 ? '#f5222d' : 'token.colorBgContainer'}`,
             }}
           >{
-              columnIndex === 7 ? 
-                rawData[rowIndex][mergedColumns[7].dataIndex] === 0 ? "正常" : '异常' : 
+              columnIndex === 8 ? 
+                rawData[rowIndex][mergedColumns[8].dataIndex] === 0 ? "正常" : '异常' : 
                 rawData[rowIndex][mergedColumns[columnIndex].dataIndex]
             }
           </div>

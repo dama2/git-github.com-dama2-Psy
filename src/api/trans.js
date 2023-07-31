@@ -45,3 +45,18 @@ export const changeStatus = (params) => {
         })
     })
 }
+
+// 实时获取交易统计信息
+export const getStaticsInfo = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api1/getTransDetail',{
+           params
+        }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取统计信息失败');
+            reject(error)
+        })
+    })
+}

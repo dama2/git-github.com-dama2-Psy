@@ -40,3 +40,48 @@ export const saveDate = (params) => {
         })
     })
 }
+
+// 获取数据集的大小
+export const getDateSize = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api1/dataSize',{
+        params
+     }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取数据集大小失败');
+            reject(error)
+        })
+    })
+}
+
+// 获取表格的具体内容
+export const dataRecore = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api1/dataRecore',{
+        params
+     }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取表格数据失败');
+            reject(error)
+        })
+    })
+}
+
+// 获取表格的具体内容
+export const dataRecord = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api1/dataRecord',{
+        params
+     }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取表格数据失败');
+            reject(error)
+        })
+    })
+}

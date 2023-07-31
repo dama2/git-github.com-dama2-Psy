@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Statistic, Table, message, Row, Col, Card } from 'antd';
+import {  Table, message} from 'antd';
 import './index.scss';
 import { dataShow } from '../../utils/table';
-import { getAllDataSet } from '../../api/data';
+import {getAllDataSet } from '../../api/data';
+import DataDetail from '../DataDetail';
+
+
+
 
 
 export default function DataConfig() {
@@ -10,7 +14,14 @@ export default function DataConfig() {
   const [data, setData] = useState([])
   // 是否正在加载
   const [loading, setLoading] = useState(false);
-  // 获取表格数据
+  
+  // 详情页面是否展示
+  const [showDetail, setShowDeatil] = useState(false)
+  // 展示那个数据集的详情
+  const [fileID, setfileID] = useState(null)
+  // 用户点击查看那个表格的内容
+
+  // 获取overview表格中的数据
   const fenthData = () => {
     setLoading(true)
     getAllDataSet().then(value => {
@@ -20,6 +31,7 @@ export default function DataConfig() {
   }
   useEffect(() => {
     fenthData()
+
   }, [])
   // 删除数据
   const handleDelte = (id) => {
@@ -35,14 +47,11 @@ export default function DataConfig() {
     setShowDeatil(true)
     setfileID(id)
   }
-  // 
+  // overview数据集的属性
   const colums = dataShow(handleDetail, handleDwoload, handleDelte)
-  // 详情页面是否展示
-  const [showDetail, setShowDeatil] = useState(false)
-  // 展示那个数据集的详情
-  const [fileID, setfileID] = useState(null)
-  // 用户点击了详情页面，保存要查看那个详情页面
-  
+  // 切换表格
+
+
   return (
     <>
       <div className='dataconfig' style={{ display: showDetail ? 'none' : '' }}>
@@ -53,20 +62,8 @@ export default function DataConfig() {
           loading={loading}
         />
       </div>
-      <div className='detail' style={{ display: showDetail ? '' : 'none' }}>
-        <Card title='action' className='card'>
-          <Statistic title="数量" value={112893} valueStyle={{color:'red'}}/>
-        </Card>
-        <Card title='sku' className='card'>
-          <Statistic title="数量" value={112893} />
-        </Card>
-        <Card title='comment' className='card'>
-          <Statistic title="数量" value={112893} />
-        </Card>
-        <Card title='order' className='card'>
-          <Statistic title="数量" value={112893} />
-        </Card>
-      </div>
+      {showDetail ? <DataDetail fileID={fileID}/> : ''}
+
     </>
   )
 }

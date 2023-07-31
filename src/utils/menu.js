@@ -11,6 +11,10 @@ export default [
           label: '上传数据',
           key: '/model/upload',
         },
+        {
+          label: '模型选择',
+          key: '/model/select',
+        },
         
       ]
     },

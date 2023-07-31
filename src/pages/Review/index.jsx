@@ -62,7 +62,7 @@ export default function Review() {
     // 向后端发送请求，请求数据
     const fetchData = () => {
         setLoading(true);
-        getFruadTrans({ current: tableParams.pagination.current, key: '1' }).then(value => {
+        getFruadTrans({ current: tableParams.pagination.current, key: '02f6ba20_1ffc_4840_8ee5_ca95b2c75ca4' }).then(value => {
             setData(value.data)
             setLoading(false);
             setTableParams({
@@ -126,7 +126,7 @@ export default function Review() {
         {
             key: '2',
             label: `心理模型性情`,
-            children: <div> <MyRadar info='123'/> </div>,
+            children: <div> <MyRadar info='123' /> </div>,
         },
     ];
 

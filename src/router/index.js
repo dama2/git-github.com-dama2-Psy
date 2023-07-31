@@ -6,6 +6,7 @@ import Psy from '../pages/Monitor'
 import Home from '../pages/Home'
 import DataConfig from '../pages/DataConfig'
 import Review from '../pages/Review'
+import ModelSelect from '../pages/ModelSelect'
 
 export default ([
     {
@@ -31,6 +32,10 @@ export default ([
 
                 path: 'upload',
                 element: <Upload />
+            },
+            {
+                path: 'select',
+                element: <ModelSelect />
             },
             
         ],

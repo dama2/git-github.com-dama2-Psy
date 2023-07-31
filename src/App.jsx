@@ -10,7 +10,7 @@ function App() {
   const route = useRoutes(router)
   const navigate=useNavigate()
   // 记录当前在那个页面
-  const [current, setCurrent] = useState('/dataDetail');
+  const [current, setCurrent] = useState('/tmonitor');
   const onClick = (e) => {
     // 页面跳转
     navigate(e.key)

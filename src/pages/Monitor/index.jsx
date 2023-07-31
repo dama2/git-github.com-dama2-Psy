@@ -1,22 +1,19 @@
-import { Button, Col, Row, Statistic } from 'antd';
+import { Statistic } from 'antd';
 import React, { useEffect, useState, useRef } from 'react'
 import * as echarts from 'echarts';
-import { transaction } from '../../utils/table';
+import { dataShow, transaction } from '../../utils/table';
 import './index.scss';
 import TableRolling from '../../components/RollingTable';
-import { getAllTransRecord } from '../../api/trans';
-
+import { getAllTransRecord, getStaticsInfo } from '../../api/trans';
 
 export default function Monitor() {
   var flag = true
   var rollTime = 80
   var rollNum = 50
   var rollTop = 2
-  // 图表定时器, 交易金额定时器
-  var timer2
+
   // 交易数据展示
   const [timer1, setTimer] = useState()
-
   // 列表数据
   const [data, setData] = useState([])
   // 总交易金额
@@ -28,31 +25,18 @@ export default function Monitor() {
   // 拦截交易数量
   const [fruadTrans, setFruadTrans] = useState(0)
 
-  const [time, setTime] = useState(0)
+  const payTypeData = [0,0,0,0,0];
 
-  //  每一千条数据，更新一次
-  var changeNum = 1000
+  let current = 0
 
-  var chartDom
-  var myChart
-  // 第一次获取表格数据
-  useEffect(() => {
-    getAllTransRecord({ key: '1' }).then(value => {
-      setData(value)
-    })
-  }, [])
-  const data1 = []
-  const data2 = []
-  const categories2 = (function () {
-    let res = [];
-    let len = 10;
-    while (len--) {
-      res.push(10 - len - 1);
-    }
-    return res;
-  })();
+  let transEchart, payTypeChart
 
-  let option = {
+  const data1 = [0, 0, 0, 0, 0, 0, 0,]
+  const data2 = [0, 0, 0, 0, 0, 0, 0,]
+  const categories = [0, 0, 0, 0, 0, 0, 0,]
+  const categories2 = [0, 0, 0, 0, 0, 0, 0]
+
+  let transOption = {
     title: {
       text: '实时拦截放行'
     },
@@ -74,13 +58,17 @@ export default function Monitor() {
         saveAsImage: {}
       }
     },
-    // x轴是否可以拖拽
     dataZoom: {
       show: false,
       start: 0,
       end: 100
     },
     xAxis: [
+      {
+        type: 'category',
+        boundaryGap: true,
+        data: categories
+      },
       {
         type: 'category',
         boundaryGap: true,
@@ -110,8 +98,42 @@ export default function Monitor() {
       }
     ]
   };
+
+  let payTypeOption = {
+    xAxis: {
+      max: 'dataMax'
+    },
+    yAxis: {
+      type: 'category',
+      data: ['A', 'B', 'C', 'D', 'E'],
+      inverse: true,
+      animationDuration: 300,
+      animationDurationUpdate: 300,
+      max: 2 // only the largest 3 bars will be displayed
+    },
+    series: [
+      {
+        realtimeSort: true,
+        name: 'X',
+        type: 'bar',
+        data: payTypeData,
+        label: {
+          show: true,
+          position: 'right',
+          valueAnimation: true
+        }
+      }
+    ],
+    legend: {
+      show: true
+    },
+    animationDuration: 0,
+    animationDurationUpdate: 3000,
+    animationEasing: 'linear',
+    animationEasingUpdate: 'linear'
+  };
   var app = {}
-  app.count = 11;
+  app.count = 0;
 
   // 使列表可以动态加载
   const InitialScroll = () => {
@@ -126,94 +148,99 @@ export default function Monitor() {
     }
   };
 
-  // 展示现在交易详情
-  const dynamicShow = () => {
-    clearInterval(timer2)
-    timer2 = setInterval(function () {
-      var temp = data.slice(changeNum * time, changeNum * (time + 1))
-      var totalTemp = 0
-      var interceptionTemp = 0
-      var fruadTransTemp = 0
-      temp.forEach((item, index) => {
-        totalTemp += item.price
-        if (item.label === 1) {
-          interceptionTemp += item.price
-          fruadTransTemp++
-        }
-      })
+  // 第一次获取表格数据
+  useState(() => {
+    getAllTransRecord({ key: '02f6ba20_1ffc_4840_8ee5_ca95b2c75ca4' }).then(value => {
+      setData(value)
+    })
+    // countRef.current=count
+  }, [])
 
-      setTotal(total + totalTemp)
-      setTotalTrans(changeNum * (time + 1))
-      setInterception(interception + interceptionTemp)
-      setFruadTrans(fruadTrans + fruadTransTemp)
-      setTime(time + 1)
+  useEffect(() => {
+    // 更新交易总额度 以及实时拦截信息
+    let id = setInterval(() => {
+      getStaticsInfo({ key: '02f6ba20_1ffc_4840_8ee5_ca95b2c75ca4', count: current }).then(value => {
+        current = current + value.rand
+        setTotal(total => value.total + total)
+        setTotalTrans(totalTrans => totalTrans + value.rand)
+        setInterception(fraudTotal => fraudTotal + value.fraudTotal)
+        setFruadTrans(fruadTrans => fruadTrans + value.fraudTrans)
 
-      if (data1.length > 10) {
+        let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
         data1.shift();
-        data2.shift(); 
+        data1.push(value.normalTrans);
+        data2.shift();
+        data2.push(value.fraudTrans);
+        categories.shift();
+        categories.push(axisData);
         categories2.shift();
         categories2.push(app.count++);
-      }
-      data1.push(1000 - fruadTransTemp);
-      data2.push(fruadTransTemp);
-
-
-
-      
-      myChart.setOption({
-        xAxis: [
-          {
-            type: 'category',
-            boundaryGap: true,
-            data: categories2,
-            show: false
-          }
-        ],
-
-        series: [
-          {
-            data: data1
-          },
-          {
-            data: data2
-          }
-        ]
-      });
-    }, 5000);
-  }
+        transEchart.setOption({
+          xAxis: [
+            {
+              data: categories
+            },
+            {
+              data: categories2
+            }
+          ],
+          series: [
+            {
+              data: data1
+            },
+            {
+              data: data2
+            }
+          ]
+        })
+        run()
+      })
+    }, 30000)
+    return () => clearInterval(id)
+  }, [])
 
   useEffect(() => {
     InitialScroll()
-    chartDom = document.querySelector('#echarts-trans');
-    myChart = echarts.init(chartDom);
-    option && myChart.setOption(option);
-    dynamicShow()
-    return () => {
-      clearInterval(timer2)
-      clearInterval(timer1)
+    transEchart = echarts.getInstanceByDom(
+      document.querySelector('#echarts-trans')
+    );
+    payTypeChart = echarts.getInstanceByDom(
+      document.querySelector('#monitor-payType')
+    )
+    if (transEchart == null) {
+      transEchart = echarts.init(document.querySelector('#echarts-trans'));
+      transOption && transEchart.setOption(transOption);
     }
-  }, [data, total])
+    if (payTypeChart == null) {
+      payTypeChart = echarts.init(document.querySelector('#monitor-payType'));
+      payTypeOption && payTypeChart.setOption(payTypeOption);
+    }
+  }, [data])
+
+  function run() {
+    for (var i = 0; i < payTypeData.length; ++i) {
+      if (Math.random() > 0.9) {
+        payTypeData[i] += Math.round(Math.random() * 2000);
+      } else {
+        payTypeData[i] += Math.round(Math.random() * 200);
+      }
+    }
+    console.log('da')
+    payTypeChart.setOption({
+      series: [
+        {
+          type: 'bar',
+          data:payTypeData
+        }
+      ]
+    });
+  }
 
   return (
     <div className='monitorContent'>
 
-      {/* 全局交易监控 */}
-      <div className='transaction'>
-        <h4>实时订单信息</h4>
-        {/* 动态表格 */}
-        <div onMouseLeave={() => { InitialScroll(); }}
-          onMouseEnter={() => { clearInterval(timer1); }}>
-          <TableRolling
-            columns={transaction}
-            dataSource={data}
-            scroll={{
-              y: 760,
-            }} />
-        </div>
-
-      </div>
-      {/* 统计数据 */}
-      <div className='staticInfo'>
+      {/* 交易数量以及交易金额统计 */}
+      <div className='left'>
         <h4>统计信息</h4>
         <div className='content'>
           <div className='total'>
@@ -222,8 +249,8 @@ export default function Monitor() {
               <Statistic title="拦截金额" value={interception} precision={2} />
             </div>
             <div className='detail'>
-              <Statistic title="交易笔数" value={totalTrans} />
-              <Statistic title="拦截笔数" value={fruadTrans} />
+              <Statistic title="交易量" value={totalTrans} />
+              <Statistic title="拦截量" value={fruadTrans} />
             </div>
           </div>
           <div id='echarts-trans'>
@@ -233,6 +260,30 @@ export default function Monitor() {
 
 
       </div>
+
+      {/* 全局交易监控 */}
+      <div className='center'>
+        <h4>实时订单信息</h4>
+        {/* 动态表格 */}
+        <div onMouseLeave={() => { InitialScroll(); }} className='table'
+          onMouseEnter={() => { clearInterval(timer1); }}>
+          <TableRolling
+            columns={transaction}
+            dataSource={data}
+            scroll={{
+              y: 630,
+            }} />
+        </div>
+
+      </div>
+
+      {/* 交易其他分布 */}
+      <div className='right'>
+        <div id='monitor-payType'></div>
+
+
+      </div>
+
 
     </div>
   )
