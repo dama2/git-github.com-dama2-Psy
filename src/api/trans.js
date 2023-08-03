@@ -60,3 +60,18 @@ export const getStaticsInfo = (params) => {
         })
     })
 }
+
+// 获取历史交易中用户所体现的交易特征
+export const getBasicVec = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api1/details',{
+           params
+        }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取基准向量失败');
+            reject(error)
+        })
+    })
+}

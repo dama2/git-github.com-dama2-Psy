@@ -3,17 +3,15 @@ import { LeftOutlined } from '@ant-design/icons';
 import './index.scss'
 import { action, sku, order, comment } from '../../utils/table';
 import CommentPie from '../../charts/CommentPie';
-import { getCommentPie, getOrderPie, getOrderPie1 } from '../../api/charts';
+import { getActionPie, getCommentPie, getOrderPie, getOrderPie1 } from '../../api/charts';
 import * as echarts from 'echarts';
-import OrderPie from '../../charts/OrderPie/index.jsx';
-import OrderPie1 from '../../charts/OrderPie1';
 import { Statistic, Table, message, Row, Col, Card } from 'antd';
 import { dataRecord, getDateSize } from '../../api/data';
-import { commentMap, orderNumMap } from '../../utils/map';
+import { commentMap, orderNumMap, actionMap } from '../../utils/map';
 
 
 export default function DataDetail(props) {
-    const { fileID } = props
+    const { fileID, closeDetail } = props
     const [isShowingTable, setIsShowingTable] = useState('action')
     // 详情里表格的名字
     const [dataTable, setDataTable] = useState([])
@@ -24,10 +22,7 @@ export default function DataDetail(props) {
     const [orderPieData, setorderPieData] = useState([])
     const [orderPieData1, setorderPieData1] = useState([])
     const [datSize, setDataSize] = useState({ action: '', comment: '', sku: '', order: '' })
-    let commentpieDom, commentpieChart = null
-    let orderpieDom, orderpieChart = null
-    let orderpieDom1, orderpieChart1 = null
-
+    let commentpieChart, orderpieChart, orderpieChart1, actionPieChart
 
     useEffect(() => {
         getDateSize({ key: fileID }).then(value => {
@@ -50,6 +45,12 @@ export default function DataDetail(props) {
                 item.name = orderNumMap[item.name]
             })
             setorderPieData1(value)
+        })
+        getActionPie({ key: fileID }).then(value => {
+            value.map(item => {
+                item.name = actionMap[item.name]
+            })
+            setactionPieData(value)
         })
         window.addEventListener("resize", () => {
             commentpieChart.resize();
@@ -87,14 +88,21 @@ export default function DataDetail(props) {
             }
             pieOption(orderPieData1, '交易数量分布') && orderpieChart1.setOption(pieOption(orderPieData1, '交易数量分布'))
 
+            actionPieChart = echarts.getInstanceByDom(
+                document.querySelector('#actionpie')
+            );
+            if (actionPieChart == null) {
+                actionPieChart = echarts.init(document.querySelector('#actionpie'));
+            }
+            pieOption(actionPieData, '浏览量分布') && actionPieChart.setOption(pieOption(actionPieData, '浏览量分布'))
+
         }, 2000)
-    }, [])
+    }, [isShowingTable])
     // 切换表格
     const handleCardChange = (tableName) => {
         setIsShowingTable(tableName)
         // 获取表格数据
         getTableData({ key: fileID, tableName: tableName })
-        // if (tableName == 'comment') commentpieChart.resize()
 
     }
     // pie 表格的 Echart
@@ -105,7 +113,8 @@ export default function DataDetail(props) {
                 left: 'center'
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                formatter: "{b} : {d}%"
             },
             legend: {
                 orient: 'vertical',
@@ -133,14 +142,16 @@ export default function DataDetail(props) {
 
     return (
         <div className='dataconfigDetail'>
-            <LeftOutlined className='back' />
+            <LeftOutlined className='back' onClick={closeDetail} />
             {/* 表格统计信息 */}
             <div className='header'>
                 {
                     Object.keys(datSize).map(key => {
-                        return < Card title={key} className={isShowingTable == key ? 'card active' : ' card'} onClick={(e, key1 = key) => handleCardChange(key1)}>
-                            <Statistic title="数量" value={datSize[key]} />
-                        </Card>
+                        return <div key={key} className={isShowingTable == key ? 'card active' : ' card'}>
+                            < Card title={key} onClick={(e, key1 = key) => handleCardChange(key1)}>
+                                <Statistic title="数量" value={datSize[key]} />
+                            </Card>
+                        </div>
                     })
                 }
             </div>
@@ -155,23 +166,24 @@ export default function DataDetail(props) {
 
                 ></Table>
                 {/* 右边是分析 */}
+                {/* <div className='rightChart' style={{ opacity: isShowingTable == 'action' ? 1 : 0 }}>
+                    <div id='commentpie' ></div>
+                </div> */}
 
-                <div className='rightChart' style={{ display: isShowingTable == 'comment' ? 'flex' : 'none' }}>
-                    <div id='commentpie' style={{ height: '70%', width: '70%', position: 'relative' }}></div>
+                <div className='rightChart' >
+
+                    <div id='actionpie' style={{ opacity: isShowingTable == 'action' ? 1 : 0, zIndex: isShowingTable == 'action' ? 100 : 0 }}></div>
+
+                    <div id='commentpie'
+                        style={{ opacity: isShowingTable == 'comment' ? 1 : 0, zIndex: isShowingTable == 'comment' ? 100 : 0 }}>
+                    </div>
+
+
+                    <div id='orderpie' style={{ opacity: isShowingTable == 'order' ? 1 : 0, zIndex: isShowingTable == 'order' ? 100 : 0 }}></div>
+                    <div id='orderpie1' style={{ opacity: isShowingTable == 'order' ? 1 : 0 ,zIndex: isShowingTable == 'order' ? 100 : 0}}></div>
+
                 </div>
 
-                <div className='rightChart' style={{ display: isShowingTable == 'order' ? 'flex' : 'none' }}>
-
-                    <div className='inner'>
-                        <div id='orderpie' style={{ height: '100%', width: '100%', position: 'relative' }}></div>
-                    </div>
-                    <div className='inner'>
-                        <div id='orderpie1' style={{ height: '100%', width: '100%', position: 'relative' }}></div>
-                    </div>
-                    {/* <div className='inner'>
-                        <div id='orderpie1'></div>
-                    </div> */}
-                </div>
             </div>
 
         </div >

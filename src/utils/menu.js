@@ -1,9 +1,5 @@
 export default [
     {
-      label: '首页',
-      key: '/home',
-    },
-    {
       label: '模型管理',
       key: '/model',
       children: [

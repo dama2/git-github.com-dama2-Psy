@@ -20,7 +20,7 @@ export default function TableRolling(props) {
     }
     return {
       ...column,
-      width: Math.floor((tableWidth-690) / widthColumnCount),
+      width: Math.floor((tableWidth-120) / widthColumnCount),
     };
   });
   const gridRef = useRef();
@@ -37,7 +37,7 @@ export default function TableRolling(props) {
   const renderVirtualList = (rawData, { scrollbarSize, ref, onScroll }) => {
 
     // 总高度
-    const totalHeight = rawData.length * 54;
+    const totalHeight = rawData.length * 50;
     return (
       <Grid
         ref={gridRef}
@@ -51,7 +51,7 @@ export default function TableRolling(props) {
         }}
         height={scroll.y}
         rowCount={rawData.length}
-        rowHeight={() => 54}
+        rowHeight={() => 50}
         width={tableWidth}
       >
         {({ columnIndex, rowIndex, style }) => (
@@ -62,7 +62,7 @@ export default function TableRolling(props) {
             style={{
               ...style,
               color: `${rawData[rowIndex][mergedColumns[8].dataIndex] === 0 ? 'black' : 'white'}`,
-
+              lineHeight:'39px',
               fontWeight: `${rawData[rowIndex][mergedColumns[8].dataIndex] === 0 ? '' : 'bold'}`,
               boxSizing: 'border-box',
               padding: token.padding,

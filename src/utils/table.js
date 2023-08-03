@@ -1,24 +1,21 @@
 // 数据监控界面，交易展示
-import { Button, message, Popconfirm } from "antd";
+import { Button, Tag, Popconfirm } from "antd";
 
 const transaction = [
     {
         title: '用户ID',
-        width: 80,
         dataIndex: 'user_id',
         key: 'user_id',
         fixed: 'left',
     },
     {
         title: '用户姓名',
-        width: 90,
         dataIndex: 'userName',
         key: 'userName',
         fixed: 'left',
     },
     {
         title: '商品ID',
-        width: 90,
         dataIndex: 'sku_id',
         key: 'sku_id',
         fixed: 'left',
@@ -26,35 +23,31 @@ const transaction = [
     },
     {
         title: '商品种类',
-        width: 100,
         dataIndex: 'cateName',
         key: 'cateName',
         fixed: 'left',
     },
     {
         title: '交易时间',
-        // width: 130,
+        width: 120,
         dataIndex: 'date',
         key: 'date',
         fixed: 'left',
     },
     {
         title: '交易金额',
-        width: 90,
         dataIndex: 'price',
         key: 'price',
         fixed: 'left',
     },
     {
         title: '订单地址',
-        width: 90,
-        dataIndex: 'areaNum',
-        key: 'areaNum',
+        dataIndex: 'areaName',
+        key: 'areaName',
         fixed: 'left',
     },
     {
         title: '交易方式',
-        width: 90,
         dataIndex: 'payType',
         key: 'payType',
         fixed: 'left',
@@ -63,7 +56,6 @@ const transaction = [
 
     {
         title: '标记',
-        width: 80,
         dataIndex: 'label',
         key: 'label',
         fixed: 'left',
@@ -71,37 +63,92 @@ const transaction = [
 ]
 
 // 数据配置界面，数据介绍
-const fraudTrans = [
-    {
-        title: '用户ID',
-        // width: 100,
-        dataIndex: 'user_id',
-        key: 'user_id',
-        fixed: 'left',
-    },
-    {
-        title: '商品ID',
-        // width: 100,
-        dataIndex: 'sku_id',
-        key: 'sku_id',
-        fixed: 'left',
+const fraudTrans = (handleSelectd,handleSumbit) => {
+    return [
+        {
+            title: '用户ID',
+            dataIndex: 'user_id',
+            key: 'user_id',
+            fixed: 'left',
+        },
+        {
+            title: '用户姓名',
+            dataIndex: 'userName',
+            key: 'userName',
+            fixed: 'left',
+        },
+        {
+            title: '商品ID',
+            dataIndex: 'sku_id',
+            key: 'sku_id',
+            fixed: 'left',
 
-    },
-    {
-        title: '订单时间',
-        // width: 100,
-        dataIndex: 'date',
-        key: 'date',
-        fixed: 'left',
-    },
-    {
-        title: '商品价格',
-        // width: 100,
-        dataIndex: 'price',
-        key: 'price',
-        fixed: 'left',
-    },
-];
+        },
+        {
+            title: '商品种类',
+            dataIndex: 'cateName',
+            key: 'cateName',
+            fixed: 'left',
+        },
+        {
+            title: '交易时间',
+            dataIndex: 'date',
+            key: 'date',
+            fixed: 'left',
+        },
+        {
+            title: '交易金额',
+            dataIndex: 'price',
+            key: 'price',
+            fixed: 'left',
+        },
+        {
+            title: '订单地址',
+            dataIndex: 'areaName',
+            key: 'areaName',
+            fixed: 'left',
+        },
+        {
+            title: '交易方式',
+            dataIndex: 'payType',
+            key: 'payType',
+            fixed: 'left',
+        },
+        {
+            title: '状态',
+            dataIndex: "status",
+            key: 'status',
+            fixed: 'left',
+            render: (item) => {
+                return item === -1 ? <Tag color="default">未审核</Tag> : item === 0 ? <Tag color="success">放行</Tag>  : <Tag color="error">拦截</Tag>
+            }
+        },
+        {
+            title: '操作',
+            key: 'operation',
+            fixed: 'right',
+            width: 100,
+            render: (item) => {
+                return <div className="tableButton">
+                    <Button type='primary' onClick={() => handleSelectd(item)}>审核</Button>
+                    <Button type='default' onClick={() => handleSumbit(1,item)}>拦截</Button>
+                    <Popconfirm
+                        title="警告"
+                        description="确定放行吗？"
+                        onConfirm={() => handleSumbit(0,item)}
+                        okText="确定"
+                        cancelText="取消"
+                    >
+                        <Button danger>放行</Button>
+                    </Popconfirm>
+                    
+                </div>
+            }
+        }
+    ];
+}
+
+
 
 // 数据配置界面，数据介绍
 const dataShow = (handleDetail, handleDwoload, handleDelte) => {
@@ -329,6 +376,11 @@ const model = [
                 title: 'Precision',
                 dataIndex: 'Precision',
                 key: 'Precision',
+            },
+            {
+                title: 'Accuracy',
+                dataIndex: 'Accuracy',
+                key: 'Accuracy',
             },
         ]
     },

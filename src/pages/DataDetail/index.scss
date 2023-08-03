@@ -36,33 +36,36 @@
         .rightChart{
             flex-grow: 1;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             flex-wrap: wrap;
             margin-left: 20px;
             position: relative;
-            justify-content: space-between;
-            .inner{
-                width: 49.5%;
-                height: 50%;
-                border: 1px solid gray;
-                
-            }
             #commentpie{
                 width: 70%;
                 height: 70%;
-                position: relative;
+                position: absolute;
+                left:50%;
+                top:50%;
+                transform: translate(-50%,-50%);
             }
             #orderpie{
-                width: 100%;
-                height: 100%;
-                position: relative;
+                width: 50%;
+                height: 50%;
+                position: absolute;
             }
             #orderpie1{
-                width: 100%;
-                height: 100%;
-                position: relative;
+                top:0;
+                left:50%;
+                width: 50%;
+                height: 50%;
+                position: absolute;
+            }
+            #actionpie{
+                width: 70%;
+                height: 70%;
+                position: absolute;
+                left:50%;
+                top:50%;
+                transform: translate(-50%,-50%);
             }
         }
     }

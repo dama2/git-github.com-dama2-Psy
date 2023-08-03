@@ -15,7 +15,7 @@ export const getCommentPie = (params) => {
     })
 }
 
-// 获取所有数据集
+// 订单表格的饼图
 export const getOrderPie = (params) => {
     return new Promise((resolve, reject) => {
         request.get('/api1/orderPie',{
@@ -29,8 +29,7 @@ export const getOrderPie = (params) => {
         })
     })
 }
-
-// 获取所有数据集
+// 订单表格的饼图
 export const getOrderPie1 = (params) => {
     return new Promise((resolve, reject) => {
         request.get('/api1/orderPie1',{
@@ -40,6 +39,21 @@ export const getOrderPie1 = (params) => {
             resolve(data)
         }).catch(error => {
             console.log('获取订单表格的数据有误');
+            reject(error)
+        })
+    })
+}
+
+// 动作表格的饼图
+export const getActionPie = (params) => {
+    return new Promise((resolve, reject) => {
+        request.get('/api2/actionPie',{
+            params
+         }).then(response => {
+            const data = response.data
+            resolve(data)
+        }).catch(error => {
+            console.log('获取动作表格的数据失败');
             reject(error)
         })
     })

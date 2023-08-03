@@ -10,10 +10,6 @@ import ModelSelect from '../pages/ModelSelect'
 
 export default ([
     {
-        path: '/home',
-        element: <Home />
-    },
-    {
         path: '/tmonitor',
         element: <Psy />
     },

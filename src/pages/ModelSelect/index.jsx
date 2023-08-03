@@ -15,7 +15,8 @@ export default function ModelSelect() {
             AUC: '65.31%',
             'F1-Score': '40.67%',
             Recall: '59.54%',
-            Precision: '34.97%'
+            Precision: '34.97%',
+            Accuracy:'68.71%'
         },
         {
             key: '2',
@@ -25,15 +26,17 @@ export default function ModelSelect() {
             'F1-Score': '44.52%',
             Recall: '61.36%',
             Precision: '39.14%',
+            Accuracy:'71.84%',
         },
         {
             key: '3',
-            name: '大五交易心理行为证书模型',
+            name: '大五交易心理行为证书模型(Big5BP)',
             info: '基于心理学大五人格模型，从交易或交互数据中分析并定义交易人格行为，包括复购、价格多样性、无关商品吸引度等，最后构建行为证书',
             AUC: '80.64%',
             'F1-Score': '64.21%',
             Recall: '56.53%',
             Precision: '85.11%',
+            Accuracy:'78.00%'
         },
     ];
     const rowSelection = {

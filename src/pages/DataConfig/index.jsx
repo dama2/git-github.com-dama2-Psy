@@ -62,8 +62,7 @@ export default function DataConfig() {
           loading={loading}
         />
       </div>
-      {showDetail ? <DataDetail fileID={fileID}/> : ''}
-
+      {showDetail ? <DataDetail fileID={fileID} closeDetail={()=>setShowDeatil(false)}/> : ''}
     </>
   )
 }

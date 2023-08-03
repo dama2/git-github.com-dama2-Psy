@@ -5,6 +5,7 @@ import { dataShow, transaction } from '../../utils/table';
 import './index.scss';
 import TableRolling from '../../components/RollingTable';
 import { getAllTransRecord, getStaticsInfo } from '../../api/trans';
+import { transOption, payTypeOption, areaNameOption, moneyOption, cateNameOption } from './chartOption';
 
 export default function Monitor() {
   var flag = true
@@ -25,115 +26,25 @@ export default function Monitor() {
   // 拦截交易数量
   const [fruadTrans, setFruadTrans] = useState(0)
 
-  const payTypeData = [0,0,0,0,0];
-
-  let current = 0
-
-  let transEchart, payTypeChart
-
+  const payTypeData = [0, 0, 0, 0, 0];
+  const areaNameData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  const cateNameData = [0, 0, 0, 0, 0, 0]
   const data1 = [0, 0, 0, 0, 0, 0, 0,]
   const data2 = [0, 0, 0, 0, 0, 0, 0,]
   const categories = [0, 0, 0, 0, 0, 0, 0,]
   const categories2 = [0, 0, 0, 0, 0, 0, 0]
 
-  let transOption = {
-    title: {
-      text: '实时拦截放行'
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#283b56'
-        }
-      }
-    },
-    legend: {},
-    toolbox: {
-      show: true,
-      feature: {
-        dataView: { readOnly: false },
-        restore: {},
-        saveAsImage: {}
-      }
-    },
-    dataZoom: {
-      show: false,
-      start: 0,
-      end: 100
-    },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: true,
-        data: categories
-      },
-      {
-        type: 'category',
-        boundaryGap: true,
-        data: categories2
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value',
-        scale: true,
-        name: '交易量',
-        max: 1000,
-        min: 0,
-        boundaryGap: [0.2, 0.2]
-      },
-    ],
-    series: [
-      {
-        name: '正常交易',
-        type: 'bar',
-        data: data1
-      },
-      {
-        name: '异常交易',
-        type: 'line',
-        data: data2
-      }
-    ]
-  };
+  const moneydata1 = [0, 0, 0, 0, 0, 0, 0]
+  const moneyData2 = [0, 0, 0, 0, 0, 0, 0]
 
-  let payTypeOption = {
-    xAxis: {
-      max: 'dataMax'
-    },
-    yAxis: {
-      type: 'category',
-      data: ['A', 'B', 'C', 'D', 'E'],
-      inverse: true,
-      animationDuration: 300,
-      animationDurationUpdate: 300,
-      max: 2 // only the largest 3 bars will be displayed
-    },
-    series: [
-      {
-        realtimeSort: true,
-        name: 'X',
-        type: 'bar',
-        data: payTypeData,
-        label: {
-          show: true,
-          position: 'right',
-          valueAnimation: true
-        }
-      }
-    ],
-    legend: {
-      show: true
-    },
-    animationDuration: 0,
-    animationDurationUpdate: 3000,
-    animationEasing: 'linear',
-    animationEasingUpdate: 'linear'
-  };
-  var app = {}
-  app.count = 0;
+
+  let current = 0
+
+  let transEchart, payTypeChart, areaNameChart, moneyChart, cateNameChart
+
+
+
+  var app = { count: 1 }
 
   // 使列表可以动态加载
   const InitialScroll = () => {
@@ -151,9 +62,8 @@ export default function Monitor() {
   // 第一次获取表格数据
   useState(() => {
     getAllTransRecord({ key: '02f6ba20_1ffc_4840_8ee5_ca95b2c75ca4' }).then(value => {
-      setData(value)
-    })
-    // countRef.current=count
+     setData(value)
+    }) 
   }, [])
 
   useEffect(() => {
@@ -165,7 +75,6 @@ export default function Monitor() {
         setTotalTrans(totalTrans => totalTrans + value.rand)
         setInterception(fraudTotal => fraudTotal + value.fraudTotal)
         setFruadTrans(fruadTrans => fruadTrans + value.fraudTrans)
-
         let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
         data1.shift();
         data1.push(value.normalTrans);
@@ -193,9 +102,67 @@ export default function Monitor() {
             }
           ]
         })
-        run()
+        moneydata1.shift()
+        moneydata1.push(value.avgNormalMoney)
+        moneyData2.shift()
+        moneyData2.push(value.avgFraudMoney)
+        moneyChart.setOption({
+          xAxis: [
+            {
+              data: categories
+            },
+            {
+              data: categories2
+            }
+          ],
+          series: [
+            {
+              data: moneydata1
+            },
+            {
+              data: moneyData2
+            }
+          ]
+        })
+
+        // 地区分布
+        for (let i in value.area) {
+          areaNameData[i] = areaNameData[i] + value.area[i]
+        }
+        areaNameChart.setOption({
+          series: [
+            {
+              type: 'bar',
+              data: areaNameData
+            }
+          ]
+        });
+        // 付款方式
+        for (let i in value.payType) {
+          payTypeData[i] = payTypeData[i] + value.payType[i]
+        }
+        payTypeChart.setOption({
+          series: [
+            {
+              type: 'bar',
+              data: payTypeData
+            }
+          ]
+        });
+        // 付款方式
+        for (let i in value.cate) {
+          cateNameData[i] = cateNameData[i] + value.cate[i]
+        }
+        cateNameChart.setOption({
+          series: [
+            {
+              type: 'bar',
+              data: cateNameData
+            }
+          ]
+        });
       })
-    }, 30000)
+    }, 3000)
     return () => clearInterval(id)
   }, [])
 
@@ -207,6 +174,16 @@ export default function Monitor() {
     payTypeChart = echarts.getInstanceByDom(
       document.querySelector('#monitor-payType')
     )
+    areaNameChart = echarts.getInstanceByDom(
+      document.querySelector('#monitor-areaName')
+    )
+    moneyChart = echarts.getInstanceByDom(
+      document.querySelector('#echarts-money')
+    )
+    cateNameChart = echarts.getInstanceByDom(
+      document.querySelector('#monitor-cateName')
+    )
+
     if (transEchart == null) {
       transEchart = echarts.init(document.querySelector('#echarts-trans'));
       transOption && transEchart.setOption(transOption);
@@ -215,55 +192,44 @@ export default function Monitor() {
       payTypeChart = echarts.init(document.querySelector('#monitor-payType'));
       payTypeOption && payTypeChart.setOption(payTypeOption);
     }
+    if (areaNameChart == null) {
+      areaNameChart = echarts.init(document.querySelector('#monitor-areaName'));
+      areaNameOption && areaNameChart.setOption(areaNameOption);
+    }
+    if (moneyChart == null) {
+      moneyChart = echarts.init(document.querySelector('#echarts-money'));
+      moneyOption && moneyChart.setOption(moneyOption);
+    }
+    if (cateNameChart == null) {
+      cateNameChart = echarts.init(document.querySelector('#monitor-cateName'));
+      cateNameOption && cateNameChart.setOption(cateNameOption);
+    }
   }, [data])
 
-  function run() {
-    for (var i = 0; i < payTypeData.length; ++i) {
-      if (Math.random() > 0.9) {
-        payTypeData[i] += Math.round(Math.random() * 2000);
-      } else {
-        payTypeData[i] += Math.round(Math.random() * 200);
-      }
-    }
-    console.log('da')
-    payTypeChart.setOption({
-      series: [
-        {
-          type: 'bar',
-          data:payTypeData
-        }
-      ]
-    });
-  }
 
   return (
     <div className='monitorContent'>
 
       {/* 交易数量以及交易金额统计 */}
       <div className='left'>
-        <h4>统计信息</h4>
-        <div className='content'>
-          <div className='total'>
-            <div className='detail' >
-              <Statistic title="交易金额" value={total} precision={2} />
-              <Statistic title="拦截金额" value={interception} precision={2} />
-            </div>
-            <div className='detail'>
-              <Statistic title="交易量" value={totalTrans} />
-              <Statistic title="拦截量" value={fruadTrans} />
-            </div>
-          </div>
-          <div id='echarts-trans'>
-          </div>
-
-        </div>
+        <div id='echarts-trans'></div>
+        <div id='echarts-money'></div>
 
 
       </div>
 
       {/* 全局交易监控 */}
       <div className='center'>
-        <h4>实时订单信息</h4>
+        <div className='total'>
+          <div className='detail' >
+            <Statistic title="交易金额" value={total} precision={2} />
+            <Statistic title="拦截金额" value={interception} precision={2} />
+          </div>
+          <div className='detail'>
+            <Statistic title="交易量" value={totalTrans} />
+            <Statistic title="拦截量" value={fruadTrans} />
+          </div>
+        </div>
         {/* 动态表格 */}
         <div onMouseLeave={() => { InitialScroll(); }} className='table'
           onMouseEnter={() => { clearInterval(timer1); }}>
@@ -271,7 +237,7 @@ export default function Monitor() {
             columns={transaction}
             dataSource={data}
             scroll={{
-              y: 630,
+              y: 700,
             }} />
         </div>
 
@@ -280,8 +246,8 @@ export default function Monitor() {
       {/* 交易其他分布 */}
       <div className='right'>
         <div id='monitor-payType'></div>
-
-
+        <div id='monitor-areaName'></div>
+        <div id='monitor-cateName'></div>
       </div>
 
 
